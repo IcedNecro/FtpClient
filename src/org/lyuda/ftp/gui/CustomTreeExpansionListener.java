@@ -46,6 +46,7 @@ public class CustomTreeExpansionListener implements TreeExpansionListener{
             if(current.getChildCount()!=0)
                  return;
              else {
+                System.out.println(this.client.getPath());
                  buildTree();
                  table.clear();
                  table.addFiles(client.getFilesAtCurrentDirrectory());

@@ -13,8 +13,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
+import org.lyuda.ftp.gui.MainFrame;
 
 /**
  *
@@ -26,6 +28,7 @@ public class DownloadThread extends Thread {
     private InputStream stream;
     private FileOutputStream output;
     private FTPClient client;
+    private Long status = new Long(0);
     
     public DownloadThread(InputStream stream, FileOutputStream output, FTPClient client) {
         this.client = client;
@@ -39,15 +42,23 @@ public class DownloadThread extends Thread {
         logger.log(Level.INFO, "Started download");
     }
     
+    public Long getStatus() {
+        return this.status;
+    }
+    
     @Override 
     public void run() {
         try {
-            logger.log(Level.INFO, "Lol");
-            while(stream.available()!=0)
+
+            MainFrame.out.writeLogEvent("INFO", "Server status "+this.client.getReplyCode());
+            while(stream.available()!=0) {
+                status++;
                 this.output.write(this.stream.read());
+            }
+            this.client.completePendingCommand();
+            
             this.stream.close();
             this.output.close();
-            this.client.completePendingCommand();
         } catch (IOException ex) {
             logger.log(Level.SEVERE, null, ex);
         }

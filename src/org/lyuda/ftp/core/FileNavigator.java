@@ -21,4 +21,6 @@ public interface FileNavigator {
     public List<FileNode<?>> goToDirectory(String dirName) throws IOException;
     public List<FileNode<?>> getFilesAtCurrentDirrectory() throws IOException;
     public List<FileNode<?>> goToDirectoryRelative(String dirName) throws IOException;
+    public FileNode<?> remove(String filename) throws IOException;
+    public String getPath();
 }

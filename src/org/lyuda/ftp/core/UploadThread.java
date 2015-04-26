@@ -28,12 +28,15 @@ public class UploadThread extends Thread {
     @Override 
     public void run() {
         try {
+            System.out.println(fis.available()+" available");
+            
             while(fis.available()!=0) {
                 status++;
+                System.out.println(status);
                 fos.write(fis.read());
             }
-            fis.close();
             fos.close();
+            fis.close();
             client.completePendingCommand();
         } catch (IOException ex) {
             Logger.getLogger(UploadThread.class.getName()).log(Level.SEVERE, null, ex);

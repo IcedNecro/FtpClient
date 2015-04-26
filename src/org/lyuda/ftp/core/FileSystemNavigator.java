@@ -72,10 +72,18 @@ public class FileSystemNavigator implements FileNavigator {
     
     @Override
     public List<FileNode<?>> goToDirectoryRelative(String dirName) throws IOException {
-        System.out.println(dirName + " dir name");
         this.path = Paths.get(dirName);
         return this.getFilesAtCurrentDirrectory();
     }
+    
+    @Override 
+    public FileNode<?> remove(String path) throws IOException {
+        Path p = Paths.get(path);
+        FileNode<File> node = new FileNode<>(p.toFile(), p.toFile().isDirectory());
+        p.toFile().delete();
+        return node;
+    }
+    
     
     public String getPath() {
         return this.path.toString()+"/";

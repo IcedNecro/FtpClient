@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,14 +35,19 @@ public class Config {
     }
 
     public static Config getInstance() {
-        if (instance == null)
+        if (instance == null) {
             Config.instance = new Config();
-
+            new ConfigFileParser();
+        }
         return Config.instance;
     }
 
     public void addBookMark(BookMark bm){
         this.bookmarks.add(bm);
+    }
+    
+    public List<BookMark> getBookMarks() {
+        return this.bookmarks;
     }
     
     public void save() {
@@ -104,9 +110,7 @@ public class Config {
 
         @Override
         public String toString() {
-            return this.host+"\t"+this.login+"\t"+this.password;
+            return this.host;
         }
-        
-        
     }
 }

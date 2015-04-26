@@ -15,8 +15,12 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.lyuda.ftp.config.Config;
@@ -26,6 +30,8 @@ public class FtpClient implements FileNavigator {
     
     private static Logger logger = Logger.getLogger("FTP client");
     private static BufferedOutputStream stream = new BufferedOutputStream(new ByteOutputStream());
+    
+    private static ExecutorService service = Executors.newFixedThreadPool(1);
     
     private static String TEST_HOST = "node100.net2ftp.ru";
     private static String USERNAME = "romanstatkevich@gmail.com";
@@ -56,9 +62,11 @@ public class FtpClient implements FileNavigator {
     }
     
     public void connect(String host, String username, String password) throws IOException{
+       
        MainFrame.out.writeLogEvent("INFO", "Trying to connect:"+host);
        this.client.connect(host);
        this.client.login(username, password);
+       this.client.setControlEncoding("UTF-8");
        MainFrame.out.writeLogEvent("INFO", "Connected");
     }
   
@@ -132,20 +140,25 @@ public class FtpClient implements FileNavigator {
     }
     
     public Thread uploadFile(File file) throws IOException {
-        OutputStream fos = this.client.appendFileStream(file.getName());
+        this.client.setFileType(FTP.BINARY_FILE_TYPE);
+         OutputStream fos = this.client.appendFileStream(file.getName());
         InputStream fis = new FileInputStreamWithStatus(file);
         Thread t = new UploadThread(fos, fis, this.client);
         t.start();
         return t;
-//        this.client.completePendingCommand();
     }
     
-    public void downloadFile(FTPFile file, String path) throws IOException {
+    public Thread downloadFile(FTPFile file, String path) throws IOException {
+        this.client.setFileType(FTP.BINARY_FILE_TYPE);
+        this.client.enterLocalPassiveMode();
         FileOutputStream fos = new FileOutputStreamWithStatus(new File(path+""+file.getName()));
-        InputStream fis = this.client.retrieveFileStream(file.getName());
-        Thread t = new DownloadThread(fis,fos,this.client);
+        System.out.println("to download "+this.pwd+file.getName());
+        InputStream stream = this.client.retrieveFileStream(this.pwd + file.getName());
+        
+        Thread t = new DownloadThread(stream,fos, this.client);
         t.start();
-//        this.client.completePendingCommand();
+        return t;
+//        ;
     }
     
     private static FileNode<FTPFile> convertToNode(FTPFile file) {
@@ -162,6 +175,11 @@ public class FtpClient implements FileNavigator {
         return node;
     }
     
+    @Override
+    public void changePath(String str) {
+        this.pwd = str;
+    }
+    
     public static void main(String[] args) throws IOException, InterruptedException {
         FtpClient c = new FtpClient();
         
@@ -169,9 +187,24 @@ public class FtpClient implements FileNavigator {
         System.out.println(c.getFilesAtCurrentDirrectory());
         System.out.println(c.goToDirectory("public_http"));
        
+        //c.downloadFile(, USERNAME);
         c.logOut();
     }    
 
+    @Override
+    public FileNode<?> remove(String filename) throws IOException {
+        if(this.client.mlistFile(filename).isDirectory())
+            this.client.removeDirectory(filename);
+        else
+            this.client.deleteFile(filename);
+        return null;
+    }
+
+    @Override 
+    public String getPath() {
+        return this.pwd;
+    }
+    
     private static class FileOutputStreamWithStatus extends FileOutputStream {
         long status = 0;
 
@@ -188,11 +221,6 @@ public class FtpClient implements FileNavigator {
         public long getStatus() {
             return status;
         }        
-    }
-    
-    @Override
-    public void changePath(String str) {
-        this.pwd = str;
     }
     
     private static class FileInputStreamWithStatus extends FileInputStream {
