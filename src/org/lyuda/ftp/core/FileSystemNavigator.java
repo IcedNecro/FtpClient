@@ -43,8 +43,11 @@ public class FileSystemNavigator implements FileNavigator {
 
     @Override
     public List<FileNode<?>> getFilesAtCurrentDirrectory() throws IOException {
-        DirectoryStream<Path> directory = Files.newDirectoryStream(this.path);
-        
+        DirectoryStream<Path> directory;
+        if(this.path==null)
+            this.path.resolve("/");
+        directory = Files.newDirectoryStream(this.path);
+            
         List<FileNode<?>> list = new ArrayList<>();
         
         
@@ -78,9 +81,9 @@ public class FileSystemNavigator implements FileNavigator {
     
     @Override 
     public FileNode<?> remove(String path) throws IOException {
-        Path p = Paths.get(path);
+        Path p = this.path.resolve(path);
         FileNode<File> node = new FileNode<>(p.toFile(), p.toFile().isDirectory());
-        p.toFile().delete();
+        Files.delete(p);
         return node;
     }
     

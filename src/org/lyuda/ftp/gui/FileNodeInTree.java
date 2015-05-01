@@ -41,4 +41,11 @@ public class FileNodeInTree extends DefaultMutableTreeNode{
         return !this.node.getType().equals(FileNode.FileType.DIRRECTORY);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        System.out.println(o);
+        if(o instanceof FileNodeInTree)
+            return this.node.getName().equals(((FileNodeInTree)o).getName());
+        return false;
+    }
 }

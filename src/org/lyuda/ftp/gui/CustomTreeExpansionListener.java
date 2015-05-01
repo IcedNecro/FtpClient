@@ -20,7 +20,7 @@ import org.lyuda.ftp.core.FileNode;
 public class CustomTreeExpansionListener implements TreeExpansionListener{
     private JTree uiFtpTree;
     private FileNavigator client;
-    private FileNodeInTree current;
+    public  FileNodeInTree current;
     private FileNodeInTree root;
     private CustomTableCellModel table;
 
@@ -36,7 +36,6 @@ public class CustomTreeExpansionListener implements TreeExpansionListener{
     public void treeExpanded(TreeExpansionEvent tee) {
         TreePath originalPath = tee.getPath();
         String path="/";
-
         for(int i=1; i<originalPath.getPathCount(); i++)
             path+=((FileNodeInTree)originalPath.getPathComponent(i)).getName()+"/";
 
@@ -45,18 +44,27 @@ public class CustomTreeExpansionListener implements TreeExpansionListener{
             client.goToDirectoryRelative(path);
             if(current.getChildCount()!=0)
                  return;
-             else {
+            else {
                 System.out.println(this.client.getPath());
-                 buildTree();
-                 table.clear();
-                 table.addFiles(client.getFilesAtCurrentDirrectory());
+                buildTree();
+                table.clear();
+                table.addFiles(client.getFilesAtCurrentDirrectory());
             }
         } catch (IOException ex) {
             Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
     }
 
+    public void refresh() throws IOException {
+        this.uiFtpTree.startEditingAtPath(new TreePath(current));
+        current.removeAllChildren();
+
+        buildTree();
+        
+        table.clear();
+        table.addFiles(client.getFilesAtCurrentDirrectory());
+    }
+    
     @Override
     public void treeCollapsed(TreeExpansionEvent tee) {
         TreePath originalPath = tee.getPath();
@@ -77,10 +85,17 @@ public class CustomTreeExpansionListener implements TreeExpansionListener{
     public void buildTree()  {
         
         try {
+            //((DefaultTreeModel)this.uiFtpTree.getModel()).reload(this.current);
+            System.out.println("");
             for(FileNode<?> node : this.client.getFilesAtCurrentDirrectory()){
+                FileNodeInTree toInsert = new FileNodeInTree(node);
+                //for(int i=0; i<((DefaultTreeModel)this.uiFtpTree.getModel()).getChildCount(this.current); i++)
+                System.out.println("inserting "+toInsert);
                 if(node.getType().equals(FileNode.FileType.DIRRECTORY))
-                    ((DefaultTreeModel)this.uiFtpTree.getModel()).insertNodeInto(new FileNodeInTree(node), this.current, 0);
+                    ((DefaultTreeModel)this.uiFtpTree.getModel()).insertNodeInto(toInsert, this.current, 0);
             }
+            ((DefaultTreeModel)this.uiFtpTree.getModel()).reload(current);
+        
         } catch (IOException ex) {
             Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
         }

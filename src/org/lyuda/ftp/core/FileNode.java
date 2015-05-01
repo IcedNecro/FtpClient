@@ -79,4 +79,12 @@ public class FileNode<E> {
       FILE,
     };
 
+    @Override
+    public boolean equals(Object o) {
+        if(this.file!=null)
+            return this.file.equals(o);
+        return false;
+    }
+
+    
 }

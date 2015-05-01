@@ -67,7 +67,8 @@ public class FtpClient implements FileNavigator {
        this.client.connect(host);
        this.client.login(username, password);
        this.client.setControlEncoding("UTF-8");
-       MainFrame.out.writeLogEvent("INFO", "Connected");
+       MainFrame.out.writeLogEvent("INFO", "Server status "+this.client.getReplyCode());
+
     }
   
     public void logOut() throws IOException{
@@ -158,7 +159,6 @@ public class FtpClient implements FileNavigator {
         Thread t = new DownloadThread(stream,fos, this.client);
         t.start();
         return t;
-//        ;
     }
     
     private static FileNode<FTPFile> convertToNode(FTPFile file) {

@@ -20,6 +20,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 import org.apache.commons.net.ftp.FTPFile;
 import org.lyuda.ftp.config.Config;
 import org.lyuda.ftp.core.DownloadThread;
@@ -32,12 +33,15 @@ import org.omg.CORBA.SystemException;
 
 public class MainFrame extends javax.swing.JFrame {
 
+    private CreateFolderDialog dialog;
     private Config config = Config.getInstance();
     private FtpClient client;
     private FileSystemNavigator navigator;
     private FileNodeInTree rootInFileSystem;
     private CustomTableCellModel fileSystemModel;
     private CustomTableCellModel ftpSystemModel;
+    private CustomTreeExpansionListener fileTree;
+    private CustomTreeExpansionListener ftpTree;
     
     public static LoggerOutputStream out = new LoggerOutputStream();
     
@@ -63,21 +67,21 @@ public class MainFrame extends javax.swing.JFrame {
         client = new FtpClient();
         navigator = new FileSystemNavigator();
         
-        
-        
         fileSystemModel = new CustomTableCellModel(this.uiCurrentDirTable);
         ftpSystemModel = new CustomTableCellModel(this.uiFtpTable);
-        CustomTreeExpansionListener l = new CustomTreeExpansionListener(
+        fileTree = new CustomTreeExpansionListener(
                 uiFileSystem, root, navigator, this.fileSystemModel);
-        this.uiFileSystem.addTreeExpansionListener(l);
-        l.buildTree();
+        this.uiFileSystem.addTreeExpansionListener(fileTree);
+        fileTree.buildTree();
         this.uiCurrentDirTable.setModel(fileSystemModel);
         this.uiFtpTable.setModel(this.ftpSystemModel);
         this.uiCurrentDirTable.getColumnModel().getColumn(0).setMaxWidth(20);
         this.uiCurrentDirTable.getColumnModel().getColumn(1).setMaxWidth(20);
         this.uiFtpTable.getColumnModel().getColumn(0).setMaxWidth(20);
         this.uiFtpTable.getColumnModel().getColumn(1).setMaxWidth(20);
-        //this.uiCurrentDirTable.setEnabled(false);
+
+        this.dialog = new CreateFolderDialog(this, true);
+        
         DefaultListModel<Config.BookMark> model = new DefaultListModel<>();
         for(Config.BookMark mark : config.getBookMarks())
             model.addElement(mark);
@@ -114,6 +118,7 @@ public class MainFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jDialog1 = new javax.swing.JDialog();
         jToolBar1 = new javax.swing.JToolBar();
         label1 = new java.awt.Label();
         uiHostInput = new javax.swing.JTextField();
@@ -135,11 +140,9 @@ public class MainFrame extends javax.swing.JFrame {
         uiFtpTable = new javax.swing.JTable();
         uiUploadButton = new javax.swing.JButton();
         uiDownloadButton = new javax.swing.JButton();
-        uiIndicator = new javax.swing.JProgressBar();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane6 = new javax.swing.JScrollPane();
         uiBookmarkList = new javax.swing.JList();
-        jLabel2 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -148,9 +151,25 @@ public class MainFrame extends javax.swing.JFrame {
         uiLabelBookmarkHost = new javax.swing.JLabel();
         uiLabelPassword = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        uiIndicator = new javax.swing.JProgressBar();
+        uiFileDelete = new javax.swing.JButton();
+        uiCreateFileSystemFolder = new javax.swing.JButton();
+        uiFtpCreateFolderButton = new javax.swing.JButton();
+        uiFTPDeleteButton = new javax.swing.JButton();
 
         FormListener formListener = new FormListener();
+
+        org.jdesktop.layout.GroupLayout jDialog1Layout = new org.jdesktop.layout.GroupLayout(jDialog1.getContentPane());
+        jDialog1.getContentPane().setLayout(jDialog1Layout);
+        jDialog1Layout.setHorizontalGroup(
+            jDialog1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(0, 400, Short.MAX_VALUE)
+        );
+        jDialog1Layout.setVerticalGroup(
+            jDialog1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(0, 300, Short.MAX_VALUE)
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addMouseMotionListener(formListener);
@@ -238,8 +257,6 @@ public class MainFrame extends javax.swing.JFrame {
 
         jScrollPane6.setViewportView(uiBookmarkList);
 
-        jLabel2.setText("Bookmarks");
-
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Bookmark info"));
 
         jLabel3.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
@@ -283,104 +300,127 @@ public class MainFrame extends javax.swing.JFrame {
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jLabel4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 18, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(uiLabelPassword, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .add(uiLabelPassword, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 44, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jButton2.setText("Create new");
+
+        jLabel2.setText("Bookmarks");
 
         org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(69, Short.MAX_VALUE)
-                .add(jLabel2)
-                .add(94, 94, 94))
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .add(jButton2)
-                .add(85, 85, 85))
             .add(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jScrollPane6, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .add(jPanel2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .add(jPanel2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(jPanel1Layout.createSequentialGroup()
+                        .add(jScrollPane6, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addContainerGap())))
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(73, Short.MAX_VALUE)
+                .add(jButton2)
+                .add(66, 66, 66))
+            .add(jPanel1Layout.createSequentialGroup()
+                .add(76, 76, 76)
+                .add(jLabel2)
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanel1Layout.createSequentialGroup()
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .add(jLabel2)
-                .add(1, 1, 1)
-                .add(jScrollPane6, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 248, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(jScrollPane6, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 198, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jPanel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jButton2)
-                .addContainerGap(65, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
-        jButton3.setText("Delete");
-        jButton3.addActionListener(formListener);
+        uiFileDelete.setText("Delete");
+        uiFileDelete.addActionListener(formListener);
+
+        uiCreateFileSystemFolder.setText("Create Folder");
+        uiCreateFileSystemFolder.addActionListener(formListener);
+
+        uiFtpCreateFolderButton.setText("Create Folder");
+        uiFtpCreateFolderButton.addActionListener(formListener);
+
+        uiFTPDeleteButton.setText("Delete");
+        uiFTPDeleteButton.addActionListener(formListener);
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jToolBar1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(jScrollPane3)
+            .add(layout.createSequentialGroup()
+                .addContainerGap()
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
                             .add(layout.createSequentialGroup()
-                                .add(uiIndicator, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 324, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                .add(uiFileDelete, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 99, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                                .add(uiUploadButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 116, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                            .add(jScrollPane4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 458, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(org.jdesktop.layout.GroupLayout.TRAILING, jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 458, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                                .add(uiCreateFileSystemFolder))
+                            .add(jScrollPane4, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE)
+                            .add(jScrollPane1))
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
+                            .add(layout.createSequentialGroup()
+                                .add(uiFTPDeleteButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 84, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                .add(uiFtpCreateFolderButton))
+                            .add(jScrollPane5, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 439, Short.MAX_VALUE)
+                            .add(jScrollPane2))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(layout.createSequentialGroup()
-                                .add(uiDownloadButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 111, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                                .add(jButton3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 99, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                .add(0, 0, Short.MAX_VALUE))
-                            .add(layout.createSequentialGroup()
-                                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
-                                    .add(jScrollPane5, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 439, Short.MAX_VALUE)
-                                    .add(jScrollPane2))
-                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                                .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
-                .addContainerGap())
+                        .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(layout.createSequentialGroup()
+                        .add(uiIndicator, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 324, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(uiUploadButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 116, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(uiDownloadButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 111, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                .add(0, 0, Short.MAX_VALUE))
+            .add(jScrollPane3)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
                 .add(jToolBar1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 31, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
                     .add(layout.createSequentialGroup()
+                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                                .add(uiCreateFileSystemFolder)
+                                .add(uiFileDelete))
+                            .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                                .add(uiFTPDeleteButton)
+                                .add(uiFtpCreateFolderButton)))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
-                            .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 368, Short.MAX_VALUE)
+                            .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE)
                             .add(jScrollPane2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
-                            .add(jScrollPane5, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
-                            .add(jScrollPane4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
-                        .add(26, 26, 26)
-                        .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(jScrollPane5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 175, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(jScrollPane4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 175, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                    .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(uiIndicator, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                         .add(uiUploadButton)
-                        .add(uiDownloadButton)
-                        .add(jButton3)))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jScrollPane3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 113, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                        .add(uiDownloadButton))
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, uiIndicator, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(18, 18, 18)
+                .add(jScrollPane3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 132, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -406,8 +446,17 @@ public class MainFrame extends javax.swing.JFrame {
             else if (evt.getSource() == uiDownloadButton) {
                 MainFrame.this.uiDownloadButtonActionPerformed(evt);
             }
-            else if (evt.getSource() == jButton3) {
-                MainFrame.this.jButton3ActionPerformed(evt);
+            else if (evt.getSource() == uiFileDelete) {
+                MainFrame.this.uiFileDeleteActionPerformed(evt);
+            }
+            else if (evt.getSource() == uiCreateFileSystemFolder) {
+                MainFrame.this.uiCreateFileSystemFolderActionPerformed(evt);
+            }
+            else if (evt.getSource() == uiFtpCreateFolderButton) {
+                MainFrame.this.uiFtpCreateFolderButtonActionPerformed(evt);
+            }
+            else if (evt.getSource() == uiFTPDeleteButton) {
+                MainFrame.this.uiFTPDeleteButtonActionPerformed(evt);
             }
         }
 
@@ -445,11 +494,11 @@ public class MainFrame extends javax.swing.JFrame {
                     FileNodeInTree root = new FileNodeInTree(node);
 
                     ((DefaultTreeModel)uiFtpTree.getModel()).setRoot(root);
-                    CustomTreeExpansionListener l = new CustomTreeExpansionListener(
+                    ftpTree = new CustomTreeExpansionListener(
                             uiFtpTree, root, client, ftpSystemModel);
-                    uiFtpTree.addTreeExpansionListener(l);
+                    uiFtpTree.addTreeExpansionListener(ftpTree);
 
-                    l.buildTree();
+                    ftpTree.buildTree();
                }
             }).start();
 
@@ -469,15 +518,48 @@ public class MainFrame extends javax.swing.JFrame {
         new DownloadIndicator(this.ftpSystemModel.getSelectedNodes()).execute();
     }//GEN-LAST:event_uiDownloadButtonActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void uiFileDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uiFileDeleteActionPerformed
         for(FileNode<?> node : this.fileSystemModel.getSelectedNodes())
             try {
                 MainFrame.out.writeLogEvent("INFO", "Deleting file "+node.getName()+" from path "+this.navigator.getPath());
                 this.navigator.remove(node.getName());
+                this.fileTree.refresh();
             } catch (IOException ex) {
                 Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_uiFileDeleteActionPerformed
+
+    private void uiCreateFileSystemFolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uiCreateFileSystemFolderActionPerformed
+        this.dialog.setNavigator(navigator);
+        this.dialog.setVisible(true);
+        try {
+            this.fileTree.refresh();
+        } catch (IOException ex) {
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }    
+    }//GEN-LAST:event_uiCreateFileSystemFolderActionPerformed
+
+    private void uiFtpCreateFolderButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uiFtpCreateFolderButtonActionPerformed
+        this.dialog.setNavigator(client);
+        this.dialog.setVisible(true);
+        try {
+            this.ftpTree.refresh();
+        } catch (IOException ex) {
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_uiFtpCreateFolderButtonActionPerformed
+
+    private void uiFTPDeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uiFTPDeleteButtonActionPerformed
+
+        for(FileNode<?> node : this.ftpSystemModel.getSelectedNodes())
+            try {
+                MainFrame.out.writeLogEvent("INFO", "Deleting file "+node.getName()+" from path "+this.client.getPath());
+                this.client.remove(node.getName());
+                this.ftpTree.refresh();
+            } catch (IOException ex) {
+                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    }//GEN-LAST:event_uiFTPDeleteButtonActionPerformed
 
     
     /**
@@ -526,6 +608,7 @@ public class MainFrame extends javax.swing.JFrame {
         @Override
         protected Void doInBackground() throws Exception {
             uiDownloadButton.setEnabled(false);
+            uiUploadButton.setEnabled(false);
             
             for(FileNode<?> node : nodes) {
                 UploadThread t = (UploadThread)client.uploadFile((File)node.getFile());
@@ -534,8 +617,12 @@ public class MainFrame extends javax.swing.JFrame {
                     MainFrame.this.uiIndicator.setValue(t.getStatus());
                 }
                 uiIndicator.setValue(0);
+                ftpTree.refresh();
+                fileTree.refresh();
             }
-            uiDownloadButton.setEnabled(false);
+            uiDownloadButton.setEnabled(true);
+            uiUploadButton.setEnabled(true);
+            
             return null;
             
         }
@@ -552,6 +639,9 @@ public class MainFrame extends javax.swing.JFrame {
         
         @Override
         protected Void doInBackground() throws Exception {
+            uiDownloadButton.setEnabled(false);
+            uiUploadButton.setEnabled(false);
+            
             for(FileNode<?> node : nodes) {
                 DownloadThread t = (DownloadThread)client.downloadFile((FTPFile)node.getFile(), navigator.getPath());
                 uiIndicator.setMaximum(node.getSize().intValue());
@@ -560,7 +650,13 @@ public class MainFrame extends javax.swing.JFrame {
                 }
                 uiIndicator.setValue(0);
                 MainFrame.out.writeLogEvent("INFO", "Download finished");
+                ftpTree.refresh();
+                fileTree.refresh();
             }
+            
+            uiDownloadButton.setEnabled(true);
+            uiUploadButton.setEnabled(true);
+            
             return null;
         }
         
@@ -569,7 +665,7 @@ public class MainFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     javax.swing.Box.Filler filler1;
     javax.swing.JButton jButton2;
-    javax.swing.JButton jButton3;
+    javax.swing.JDialog jDialog1;
     javax.swing.JLabel jLabel1;
     javax.swing.JLabel jLabel2;
     javax.swing.JLabel jLabel3;
@@ -589,9 +685,13 @@ public class MainFrame extends javax.swing.JFrame {
     javax.swing.JTextPane logger;
     javax.swing.JList uiBookmarkList;
     javax.swing.JButton uiConnectButton;
+    javax.swing.JButton uiCreateFileSystemFolder;
     javax.swing.JTable uiCurrentDirTable;
     javax.swing.JButton uiDownloadButton;
+    javax.swing.JButton uiFTPDeleteButton;
+    javax.swing.JButton uiFileDelete;
     javax.swing.JTree uiFileSystem;
+    javax.swing.JButton uiFtpCreateFolderButton;
     javax.swing.JTable uiFtpTable;
     javax.swing.JTree uiFtpTree;
     javax.swing.JTextField uiHostInput;
