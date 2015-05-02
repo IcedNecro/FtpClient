@@ -33,6 +33,7 @@ import org.omg.CORBA.SystemException;
 
 public class MainFrame extends javax.swing.JFrame {
 
+    private CreateBookmarkDialog bookmarkDialog;
     private CreateFolderDialog dialog;
     private Config config = Config.getInstance();
     private FtpClient client;
@@ -88,22 +89,29 @@ public class MainFrame extends javax.swing.JFrame {
         
         this.uiBookmarkList.setModel(model);
         
+        this.bookmarkDialog = new CreateBookmarkDialog(this, true, uiBookmarkList);
+        
         this.uiBookmarkList.addListSelectionListener(new ListSelectionListener() {
 
             @Override
             public void valueChanged(ListSelectionEvent lse) {
-                if(!lse.getValueIsAdjusting()) {
-                    int index = lse.getFirstIndex();
-                    Config.BookMark bookmark = (Config.BookMark)uiBookmarkList.getModel().getElementAt(index);
-                    uiLabelBookmarkHost.setText(bookmark.getHost());
-                    uiLabelBookmarkUser.setText(bookmark.getLogin());
-                    uiLabelPassword.setText(bookmark.getPassword());
+                try {
+                    if(!lse.getValueIsAdjusting()) {
+                        int index = uiBookmarkList.getSelectedIndex();
+                        System.out.println("index of bookmark "+ index);
+
+                        Config.BookMark bookmark = (Config.BookMark)uiBookmarkList.getModel().getElementAt(index);
+                        uiLabelBookmarkHost.setText(bookmark.getHost());
+                        uiLabelBookmarkUser.setText(bookmark.getLogin());
+                        uiLabelPassword.setText(bookmark.getPassword());
+
+                        uiPasswordInput.setText(bookmark.getPassword());
+                        uiHostInput.setText(bookmark.getHost());
+                        uiUserNameInput.setText(bookmark.getLogin());
+                    }
+                } catch(ArrayIndexOutOfBoundsException e) {
                     
-                    uiPasswordInput.setText(bookmark.getPassword());
-                    uiHostInput.setText(bookmark.getHost());
-                    uiUserNameInput.setText(bookmark.getLogin());
                 }
-                    
             }
         });
     }
@@ -152,6 +160,7 @@ public class MainFrame extends javax.swing.JFrame {
         uiLabelPassword = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
+        uiDeleteBookmarkButton = new javax.swing.JButton();
         uiIndicator = new javax.swing.JProgressBar();
         uiFileDelete = new javax.swing.JButton();
         uiCreateFileSystemFolder = new javax.swing.JButton();
@@ -305,8 +314,12 @@ public class MainFrame extends javax.swing.JFrame {
         );
 
         jButton2.setText("Create new");
+        jButton2.addActionListener(formListener);
 
         jLabel2.setText("Bookmarks");
+
+        uiDeleteBookmarkButton.setText("Delete");
+        uiDeleteBookmarkButton.addActionListener(formListener);
 
         org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -319,26 +332,31 @@ public class MainFrame extends javax.swing.JFrame {
                     .add(jPanel1Layout.createSequentialGroup()
                         .add(jScrollPane6, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                         .addContainerGap())))
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(73, Short.MAX_VALUE)
-                .add(jButton2)
-                .add(66, 66, 66))
             .add(jPanel1Layout.createSequentialGroup()
-                .add(76, 76, 76)
-                .add(jLabel2)
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPanel1Layout.createSequentialGroup()
+                        .add(76, 76, 76)
+                        .add(jLabel2))
+                    .add(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .add(jButton2)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(uiDeleteBookmarkButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 84, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(39, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(18, Short.MAX_VALUE)
                 .add(jLabel2)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(jScrollPane6, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 198, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jPanel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jButton2)
+                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jButton2)
+                    .add(uiDeleteBookmarkButton))
                 .addContainerGap())
         );
 
@@ -446,6 +464,9 @@ public class MainFrame extends javax.swing.JFrame {
             else if (evt.getSource() == uiDownloadButton) {
                 MainFrame.this.uiDownloadButtonActionPerformed(evt);
             }
+            else if (evt.getSource() == jButton2) {
+                MainFrame.this.jButton2ActionPerformed(evt);
+            }
             else if (evt.getSource() == uiFileDelete) {
                 MainFrame.this.uiFileDeleteActionPerformed(evt);
             }
@@ -457,6 +478,9 @@ public class MainFrame extends javax.swing.JFrame {
             }
             else if (evt.getSource() == uiFTPDeleteButton) {
                 MainFrame.this.uiFTPDeleteButtonActionPerformed(evt);
+            }
+            else if (evt.getSource() == uiDeleteBookmarkButton) {
+                MainFrame.this.uiDeleteBookmarkButtonActionPerformed(evt);
             }
         }
 
@@ -560,6 +584,15 @@ public class MainFrame extends javax.swing.JFrame {
                 Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
     }//GEN-LAST:event_uiFTPDeleteButtonActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        this.bookmarkDialog.setVisible(true);
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void uiDeleteBookmarkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uiDeleteBookmarkButtonActionPerformed
+        //System.out.println(this.uiBookmarkList.getModel().getSize());
+        ((DefaultListModel<Config.BookMark>)this.uiBookmarkList.getModel()).remove(this.uiBookmarkList.getSelectedIndex());        
+    }//GEN-LAST:event_uiDeleteBookmarkButtonActionPerformed
 
     
     /**
@@ -687,6 +720,7 @@ public class MainFrame extends javax.swing.JFrame {
     javax.swing.JButton uiConnectButton;
     javax.swing.JButton uiCreateFileSystemFolder;
     javax.swing.JTable uiCurrentDirTable;
+    javax.swing.JButton uiDeleteBookmarkButton;
     javax.swing.JButton uiDownloadButton;
     javax.swing.JButton uiFTPDeleteButton;
     javax.swing.JButton uiFileDelete;
