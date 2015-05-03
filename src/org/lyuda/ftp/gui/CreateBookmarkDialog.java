@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.lyuda.ftp.gui;
 
 import javax.swing.DefaultListModel;
@@ -45,12 +40,6 @@ public class CreateBookmarkDialog extends javax.swing.JDialog {
         uiCancelBookmarkCreation = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-
-        uiNewBookmarkUserName.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                uiNewBookmarkUserNameActionPerformed(evt);
-            }
-        });
 
         jLabel1.setText("Host");
 
@@ -142,10 +131,6 @@ public class CreateBookmarkDialog extends javax.swing.JDialog {
         this.setVisible(false);
             
     }//GEN-LAST:event_uiConfirmNewBookMarkActionPerformed
-
-    private void uiNewBookmarkUserNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uiNewBookmarkUserNameActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_uiNewBookmarkUserNameActionPerformed
 
     private void uiCancelBookmarkCreationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uiCancelBookmarkCreationActionPerformed
         this.setVisible(false);

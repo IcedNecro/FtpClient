@@ -140,7 +140,7 @@ public class MainFrame extends javax.swing.JFrame {
         uiLabelBookmarkUser = new javax.swing.JLabel();
         uiLabelBookmarkHost = new javax.swing.JLabel();
         uiLabelPassword = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
+        uiCreateBookmarkDialog = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         uiDeleteBookmarkButton = new javax.swing.JButton();
         uiIndicator = new javax.swing.JProgressBar();
@@ -175,7 +175,6 @@ public class MainFrame extends javax.swing.JFrame {
         uiHostInput.setMinimumSize(new java.awt.Dimension(100, 28));
         uiHostInput.setName("uiHostInput"); // NOI18N
         uiHostInput.setPreferredSize(new java.awt.Dimension(100, 28));
-        uiHostInput.addActionListener(formListener);
         jToolBar1.add(uiHostInput);
 
         label3.setText("UserName");
@@ -183,7 +182,6 @@ public class MainFrame extends javax.swing.JFrame {
         label3.getAccessibleContext().setAccessibleName("uiLoginLabel");
 
         uiUserNameInput.setPreferredSize(new java.awt.Dimension(100, 28));
-        uiUserNameInput.addActionListener(formListener);
         jToolBar1.add(uiUserNameInput);
 
         jLabel1.setText("Password");
@@ -298,8 +296,8 @@ public class MainFrame extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jButton2.setText("Create new");
-        jButton2.addActionListener(formListener);
+        uiCreateBookmarkDialog.setText("Create new");
+        uiCreateBookmarkDialog.addActionListener(formListener);
 
         jLabel2.setText("Bookmarks");
 
@@ -324,7 +322,7 @@ public class MainFrame extends javax.swing.JFrame {
                         .add(jLabel2))
                     .add(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
-                        .add(jButton2)
+                        .add(uiCreateBookmarkDialog)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(uiDeleteBookmarkButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 84, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(39, Short.MAX_VALUE))
@@ -340,7 +338,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .add(jPanel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jButton2)
+                    .add(uiCreateBookmarkDialog)
                     .add(uiDeleteBookmarkButton))
                 .addContainerGap())
         );
@@ -432,13 +430,7 @@ public class MainFrame extends javax.swing.JFrame {
     private class FormListener implements java.awt.event.ActionListener, java.awt.event.MouseMotionListener {
         FormListener() {}
         public void actionPerformed(java.awt.event.ActionEvent evt) {
-            if (evt.getSource() == uiHostInput) {
-                MainFrame.this.uiHostInputActionPerformed(evt);
-            }
-            else if (evt.getSource() == uiUserNameInput) {
-                MainFrame.this.uiUserNameInputActionPerformed(evt);
-            }
-            else if (evt.getSource() == uiConnectButton) {
+            if (evt.getSource() == uiConnectButton) {
                 MainFrame.this.uiConnectButtonActionPerformed(evt);
             }
             else if (evt.getSource() == uiUploadButton) {
@@ -447,8 +439,8 @@ public class MainFrame extends javax.swing.JFrame {
             else if (evt.getSource() == uiDownloadButton) {
                 MainFrame.this.uiDownloadButtonActionPerformed(evt);
             }
-            else if (evt.getSource() == jButton2) {
-                MainFrame.this.jButton2ActionPerformed(evt);
+            else if (evt.getSource() == uiCreateBookmarkDialog) {
+                MainFrame.this.uiCreateBookmarkDialogActionPerformed(evt);
             }
             else if (evt.getSource() == uiDeleteBookmarkButton) {
                 MainFrame.this.uiDeleteBookmarkButtonActionPerformed(evt);
@@ -476,12 +468,6 @@ public class MainFrame extends javax.swing.JFrame {
         public void mouseMoved(java.awt.event.MouseEvent evt) {
         }
     }// </editor-fold>//GEN-END:initComponents
-
-    private void uiUserNameInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uiUserNameInputActionPerformed
-    }//GEN-LAST:event_uiUserNameInputActionPerformed
-
-    private void uiHostInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uiHostInputActionPerformed
-    }//GEN-LAST:event_uiHostInputActionPerformed
 
     private void uiConnectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uiConnectButtonActionPerformed
         final String password = new String(this.uiPasswordInput.getPassword());
@@ -568,9 +554,9 @@ public class MainFrame extends javax.swing.JFrame {
             }
     }//GEN-LAST:event_uiFTPDeleteButtonActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void uiCreateBookmarkDialogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uiCreateBookmarkDialogActionPerformed
         this.bookmarkDialog.setVisible(true);
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_uiCreateBookmarkDialogActionPerformed
 
     private void uiDeleteBookmarkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uiDeleteBookmarkButtonActionPerformed
         ((DefaultListModel<Config.BookMark>)this.uiBookmarkList.getModel()).remove(this.uiBookmarkList.getSelectedIndex());        
@@ -674,7 +660,6 @@ public class MainFrame extends javax.swing.JFrame {
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     javax.swing.Box.Filler filler1;
-    javax.swing.JButton jButton2;
     javax.swing.JDialog jDialog1;
     javax.swing.JLabel jLabel1;
     javax.swing.JLabel jLabel2;
@@ -695,6 +680,7 @@ public class MainFrame extends javax.swing.JFrame {
     javax.swing.JTextPane logger;
     javax.swing.JList uiBookmarkList;
     javax.swing.JButton uiConnectButton;
+    javax.swing.JButton uiCreateBookmarkDialog;
     javax.swing.JButton uiCreateFileSystemFolder;
     javax.swing.JTable uiCurrentDirTable;
     javax.swing.JButton uiDeleteBookmarkButton;

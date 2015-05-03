@@ -3,23 +3,21 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/git_coursach/FtpClient/src/org/lyuda/ftp/core/UploadThread.java</file>
-            <file>file:/D:/git_coursach/FtpClient/src/org/lyuda/ftp/core/FileNavigator.java</file>
-            <file>file:/D:/git_coursach/FtpClient/src/org/lyuda/ftp/gui/CreateFolderDialog.java</file>
-            <file>file:/D:/git_coursach/FtpClient/src/org/lyuda/ftp/gui/CustomTreeExpansionListener.java</file>
-            <file>file:/D:/git_coursach/FtpClient/src/org/lyuda/ftp/core/FileNode.java</file>
-            <file>file:/D:/git_coursach/FtpClient/src/org/lyuda/ftp/gui/CreateBookmarkDialog.java</file>
-            <file>file:/D:/git_coursach/FtpClient/src/org/lyuda/ftp/config/ConfigFileParser.java</file>
-            <file>file:/D:/git_coursach/FtpClient/src/org/lyuda/ftp/gui/LoggerOutputStream.java</file>
-            <file>file:/D:/git_coursach/FtpClient/src/org/lyuda/ftp/gui/CustomTableCellModel.java</file>
-            <file>file:/D:/git_coursach/FtpClient/src/org/lyuda/ftp/core/DownloadThread.java</file>
-            <file>file:/D:/git_coursach/FtpClient/src/org/lyuda/ftp/gui/MainFrame.java</file>
-            <file>file:/D:/git_coursach/FtpClient/src/org/lyuda/ftp/gui/FileNodeInTree.java</file>
-            <file>file:/D:/git_coursach/FtpClient/src/org/lyuda/ftp/config/Config.java</file>
-            <file>file:/D:/git_coursach/FtpClient/src/org/lyuda/ftp/core/FtpClient.java</file>
-            <file>file:/D:/git_coursach/FtpClient/src/org/lyuda/ftp/gui/CustomCellEditor.java</file>
-            <file>file:/D:/git_coursach/FtpClient/src/org/lyuda/ftp/core/FileSystemNavigator.java</file>
-            <file>file:/D:/git_coursach/FtpClient/src/org/lyuda/ftp/gui/CustomCellRenderer.java</file>
+            <file>file:/home/roman/git/FtpClient/src/org/lyuda/ftp/gui/CustomCellRenderer.java</file>
+            <file>file:/home/roman/git/FtpClient/src/org/lyuda/ftp/gui/CustomTableCellModel.java</file>
+            <file>file:/home/roman/git/FtpClient/src/org/lyuda/ftp/gui/CustomCellEditor.java</file>
+            <file>file:/home/roman/git/FtpClient/src/org/lyuda/ftp/core/FileNavigator.java</file>
+            <file>file:/home/roman/git/FtpClient/src/org/lyuda/ftp/core/FtpClient.java</file>
+            <file>file:/home/roman/git/FtpClient/src/org/lyuda/ftp/gui/LoggerOutputStream.java</file>
+            <file>file:/home/roman/git/FtpClient/src/org/lyuda/ftp/gui/CreateBookmarkDialog.java</file>
+            <file>file:/home/roman/git/FtpClient/src/org/lyuda/ftp/gui/CreateFolderDialog.java</file>
+            <file>file:/home/roman/git/FtpClient/src/org/lyuda/ftp/gui/MainFrame.java</file>
+            <file>file:/home/roman/git/FtpClient/src/org/lyuda/ftp/core/UploadThread.java</file>
+            <file>file:/home/roman/git/FtpClient/src/org/lyuda/ftp/core/FileSystemNavigator.java</file>
+            <file>file:/home/roman/git/FtpClient/src/org/lyuda/ftp/gui/FileNodeInTree.java</file>
+            <file>file:/home/roman/git/FtpClient/src/org/lyuda/ftp/core/DownloadThread.java</file>
+            <file>file:/home/roman/git/FtpClient/src/org/lyuda/ftp/core/FileNode.java</file>
+            <file>file:/home/roman/git/FtpClient/src/org/lyuda/ftp/gui/CustomTreeExpansionListener.java</file>
         </group>
     </open-files>
 </project-private>

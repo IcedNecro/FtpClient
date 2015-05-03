@@ -86,9 +86,6 @@
     <Component class="javax.swing.JFormattedTextField" name="uiNewBookmarkHost">
     </Component>
     <Component class="javax.swing.JFormattedTextField" name="uiNewBookmarkUserName">
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="uiNewBookmarkUserNameActionPerformed"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JFormattedTextField" name="uiNewBookMarkPassword">
     </Component>

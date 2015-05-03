@@ -1,24 +1,14 @@
 package org.lyuda.ftp.core;
 
-import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
-import com.sun.xml.internal.messaging.saaj.util.CharWriter;
-import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
@@ -29,9 +19,7 @@ import org.lyuda.ftp.gui.MainFrame;
 public class FtpClient implements FileNavigator {
     
     private static Logger logger = Logger.getLogger("FTP client");
-    private static BufferedOutputStream stream = new BufferedOutputStream(new ByteOutputStream());
     
-    private static ExecutorService service = Executors.newFixedThreadPool(1);
     private FTPClient client;
     private String pwd="/";
     
@@ -112,25 +100,11 @@ public class FtpClient implements FileNavigator {
         
         return fileList;
     }
-
-    public String currentPosition() {
-        return this.pwd;
-    }
-    
-    public void uploadGroupOfFiles(File[] files) throws IOException {
-        for(File file : files)
-            this.uploadFile(file);
-    }
-    
-    public void downloadGroupOfFiles(FTPFile[] files, String path) throws IOException{
-        for(FTPFile file : files)
-            this.downloadFile(file, path);
-    }
-    
+   
     public Thread uploadFile(File file) throws IOException {
         this.client.setFileType(FTP.BINARY_FILE_TYPE);
          OutputStream fos = this.client.appendFileStream(file.getName());
-        InputStream fis = new FileInputStreamWithStatus(file);
+        InputStream fis = new FileInputStream(file);
         Thread t = new UploadThread(fos, fis, this.client);
         t.start();
         return t;
@@ -139,7 +113,7 @@ public class FtpClient implements FileNavigator {
     public Thread downloadFile(FTPFile file, String path) throws IOException {
         this.client.setFileType(FTP.BINARY_FILE_TYPE);
         this.client.enterLocalPassiveMode();
-        FileOutputStream fos = new FileOutputStreamWithStatus(new File(path+""+file.getName()));
+        FileOutputStream fos = new FileOutputStream(new File(path+""+file.getName()));
         InputStream stream = this.client.retrieveFileStream(this.pwd + file.getName());
         
         Thread t = new DownloadThread(stream,fos, this.client);
@@ -178,46 +152,6 @@ public class FtpClient implements FileNavigator {
     @Override 
     public String getPath() {
         return this.pwd;
-    }
-    
-    private static class FileOutputStreamWithStatus extends FileOutputStream {
-        long status = 0;
-
-        public FileOutputStreamWithStatus(File file) throws FileNotFoundException {
-            super(file);
-        }
-        
-        @Override
-        public void write(int i) throws IOException {
-            super.write(i); 
-            status++;
-        }
-
-        public long getStatus() {
-            return status;
-        }        
-    }
-    
-    private static class FileInputStreamWithStatus extends FileInputStream {
-        long status = 0;
-
-        public FileInputStreamWithStatus(File file) throws FileNotFoundException {
-            super(file);
-        }
-
-        @Override
-        public int read() throws IOException {
-            status++;
-            return super.read(); 
-        }
-        
-        public long getStatus() {
-            return status;
-        }        
-    }
-    
-    public static OutputStream getOutput() {
-        return stream;
     }
 }
 
