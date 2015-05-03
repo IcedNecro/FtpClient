@@ -14,6 +14,10 @@ import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Parses bookmark info from config/prop.prop
+ * 
+ */
 public class ConfigFileParser {
     private static final String PATH_TO_CONFIG_FILE = "config/prop.prop";
     private static final String BOOKMARK_NODES = "\\{([^,]+)\\}\\s*";
@@ -33,6 +37,9 @@ public class ConfigFileParser {
         }
     }
 
+    /**
+     * Thread that parses data from config
+     */
     private class OpenThreadRunnable implements Runnable {
         private BufferedReader reader;
 
@@ -58,6 +65,11 @@ public class ConfigFileParser {
 
         }
 
+        /**
+         * Seeks given pattern in given str
+         * @param str
+         * @return 
+         */
         public HashMap<String,String[]>  patternSeeker(String str) {
             Pattern pattern = Pattern.compile(BOOK_MARKS_PATERN);
             Matcher matcher = pattern.matcher(str);
@@ -78,7 +90,11 @@ public class ConfigFileParser {
             return map;
         }
 
-
+        /**
+         * 
+         * @param str - input string
+         * @return - parsed data
+         */
         private String[] parseInfo(String str){
 
             Pattern pattern = Pattern.compile(ConfigFileParser.BOOK_MARKS_PATERN);
@@ -116,7 +132,11 @@ public class ConfigFileParser {
             }
             return answer;
         }
-
+        
+        /**
+         * Parses bookmark data
+         * @param str 
+         */
         public void parseBookmarks(String str) {
             Config config = Config.getInstance();
 

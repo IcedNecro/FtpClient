@@ -65,7 +65,7 @@ public class FileSystemNavigator implements FileNavigator {
     }
     
     @Override
-    public List<FileNode<?>> goToDirectoryRelative(String dirName) throws IOException {
+    public List<FileNode<?>> goToDirectoryAbsolute(String dirName) throws IOException {
         this.path = Paths.get(dirName);
         return this.getFilesAtCurrentDirrectory();
     }
@@ -78,7 +78,7 @@ public class FileSystemNavigator implements FileNavigator {
         return node;
     }
     
-    
+    @Override
     public String getPath() {
         return this.path.toString()+"/";
     }

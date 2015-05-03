@@ -8,7 +8,10 @@ import java.util.logging.Logger;
 import org.apache.commons.net.ftp.FTPClient;
 import org.lyuda.ftp.gui.MainFrame;
 
-
+/**
+ * 
+ * Thread for downloading file from ftp-server
+ */
 public class DownloadThread extends Thread {
 
     private static Logger logger = Logger.getLogger("Download");
@@ -17,6 +20,12 @@ public class DownloadThread extends Thread {
     private FTPClient client;
     private Long status = new Long(0);
     
+    /**
+     * 
+     * @param stream - input
+     * @param output - where to output
+     * @param client 
+     */
     public DownloadThread(InputStream stream, FileOutputStream output, FTPClient client) {
         this.client = client;
         this.stream = stream;

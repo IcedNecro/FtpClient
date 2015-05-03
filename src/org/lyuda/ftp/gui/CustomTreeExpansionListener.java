@@ -36,7 +36,7 @@ public class CustomTreeExpansionListener implements TreeExpansionListener{
 
         current = (FileNodeInTree)(originalPath.getLastPathComponent());
         try {
-            client.goToDirectoryRelative(path);
+            client.goToDirectoryAbsolute(path);
             if(current.getChildCount()!=0)
                  return;
             else {
@@ -67,7 +67,7 @@ public class CustomTreeExpansionListener implements TreeExpansionListener{
             for(int i=0; i<originalPath.getPathCount(); i++)
                 path+=((FileNodeInTree)originalPath.getPathComponent(i)).getName()+"/";
             current = (FileNodeInTree)(originalPath.getLastPathComponent());
-            client.goToDirectoryRelative(path);
+            client.goToDirectoryAbsolute(path);
             table.clear();
             table.addFiles(client.getFilesAtCurrentDirrectory());
         } catch (IOException ex) {

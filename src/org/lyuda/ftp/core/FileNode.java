@@ -2,6 +2,12 @@ package org.lyuda.ftp.core;
 
 import java.util.Calendar;
 
+/**
+ * Generic adapter for FileNavigator, that provides an abstraction
+ * for file in file system
+ * @param <E> - class that represents a type of file descriptor in specific file
+ * system
+ */
 public class FileNode<E> {
     
     private E file;
@@ -10,6 +16,11 @@ public class FileNode<E> {
     private String name;
     private Long size;
     
+    /**
+     * 
+     * @param file
+     * @param isDirrectory 
+     */
     public FileNode(E file, boolean isDirrectory) {
         if(isDirrectory)
             this.type = FileType.DIRRECTORY;
@@ -58,8 +69,6 @@ public class FileNode<E> {
         this.size = size;
     }
 
-    
-    
     @Override
     public String toString() {
         return this.name+" "+this.type.name();

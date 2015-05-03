@@ -7,6 +7,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.net.ftp.FTPClient;
 
+/**
+ * Thread for uploading file to ftp-server
+ * 
+ */
 public class UploadThread extends Thread {
     
     private OutputStream fos;

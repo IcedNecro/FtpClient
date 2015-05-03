@@ -1,10 +1,7 @@
 package org.lyuda.ftp.config;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,6 +9,11 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
+/**
+ * Singleton configuration
+ * @author roman
+ */
 public class Config {
     private static Config instance;
     private String homeDirectory;

@@ -16,6 +16,10 @@ import org.apache.commons.net.ftp.FTPFile;
 import org.lyuda.ftp.config.Config;
 import org.lyuda.ftp.gui.MainFrame;
 
+
+/**
+ * FileNavigator implementation, supports CRUD operations over ftp-server
+ */
 public class FtpClient implements FileNavigator {
     
     private static Logger logger = Logger.getLogger("FTP client");
@@ -31,12 +35,13 @@ public class FtpClient implements FileNavigator {
     public FtpClient() {
         this.client = new FTPClient();
     }
-
-    public void connect(Config.BookMark bookMark) throws IOException{
-       this.client.connect(bookMark.getHost());
-       this.client.login(bookMark.getLogin(), bookMark.getPassword());
-    }
-    
+    /**
+     * Connects to ftp server, specified by "host", using given "username" and "password"
+     * @param host
+     * @param username
+     * @param password
+     * @throws IOException 
+     */    
     public void connect(String host, String username, String password) throws IOException{
        
        MainFrame.out.writeLogEvent("INFO", "Trying to connect:"+host);
@@ -47,6 +52,10 @@ public class FtpClient implements FileNavigator {
 
     }
   
+    /**
+     * Closes user session
+     * @throws IOException 
+     */
     public void logOut() throws IOException{
         client.logout();
     }
@@ -64,8 +73,9 @@ public class FtpClient implements FileNavigator {
 
         return files;
     }
-
-    public List<FileNode<?>> goToDirectoryRelative(String dirName) throws IOException{
+    
+    @Override
+    public List<FileNode<?>> goToDirectoryAbsolute(String dirName) throws IOException{
 
         this.pwd = dirName;
         this.client.changeWorkingDirectory(this.pwd);
@@ -100,7 +110,13 @@ public class FtpClient implements FileNavigator {
         
         return fileList;
     }
-   
+    
+    /**
+     * Uploads file to the ftp-server
+     * @param file - file you need to upload
+     * @return - thread that uploads file
+     * @throws IOException 
+     */
     public Thread uploadFile(File file) throws IOException {
         this.client.setFileType(FTP.BINARY_FILE_TYPE);
          OutputStream fos = this.client.appendFileStream(file.getName());
@@ -110,6 +126,12 @@ public class FtpClient implements FileNavigator {
         return t;
     }
     
+    /**
+     * Downloads file to the ftp-server
+     * @param file - file you need to upload
+     * @return - thread that uploads file
+     * @throws IOException 
+     */
     public Thread downloadFile(FTPFile file, String path) throws IOException {
         this.client.setFileType(FTP.BINARY_FILE_TYPE);
         this.client.enterLocalPassiveMode();
@@ -120,7 +142,11 @@ public class FtpClient implements FileNavigator {
         t.start();
         return t;
     }
-    
+    /**
+     * Returns adapted filenode that wraps FTPFile
+     * @param file - file to be wrapped
+     * @return 
+     */
     private static FileNode<FTPFile> convertToNode(FTPFile file) {
         String name = file.getName();
         Calendar date = file.getTimestamp();
