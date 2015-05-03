@@ -32,18 +32,6 @@ public class FtpClient implements FileNavigator {
     private static BufferedOutputStream stream = new BufferedOutputStream(new ByteOutputStream());
     
     private static ExecutorService service = Executors.newFixedThreadPool(1);
-    
-    private static String TEST_HOST = "node100.net2ftp.ru";
-    private static String USERNAME = "romanstatkevich@gmail.com";
-    private static String PASSWORD =  "3b05809e25ee";
-   
-    static {
-    }
-    
-   /* private static String TEST_HOST = "ftp.asu.kpi.ua";
-    private static String USERNAME = "ip3219";
-    private static String PASSWORD =  "081996";
-    */
     private FTPClient client;
     private String pwd="/";
     
@@ -104,7 +92,6 @@ public class FtpClient implements FileNavigator {
     public List<FileNode<?>> goToDirectory(String dirName) throws IOException{
 
         this.pwd += dirName+"/";
-        System.out.println(this.pwd);
         
         this.client.changeWorkingDirectory(this.pwd);
         List<FileNode<?>> files = new ArrayList<FileNode<?>>();
@@ -153,7 +140,6 @@ public class FtpClient implements FileNavigator {
         this.client.setFileType(FTP.BINARY_FILE_TYPE);
         this.client.enterLocalPassiveMode();
         FileOutputStream fos = new FileOutputStreamWithStatus(new File(path+""+file.getName()));
-        System.out.println("to download "+this.pwd+file.getName());
         InputStream stream = this.client.retrieveFileStream(this.pwd + file.getName());
         
         Thread t = new DownloadThread(stream,fos, this.client);
@@ -180,17 +166,6 @@ public class FtpClient implements FileNavigator {
         this.pwd = str;
     }
     
-    public static void main(String[] args) throws IOException, InterruptedException {
-        FtpClient c = new FtpClient();
-        
-        c.connect(TEST_HOST, USERNAME, PASSWORD);
-        System.out.println(c.getFilesAtCurrentDirrectory());
-        System.out.println(c.goToDirectory("public_http"));
-       
-        //c.downloadFile(, USERNAME);
-        c.logOut();
-    }    
-
     @Override
     public FileNode<?> remove(String filename) throws IOException {
         if(this.client.mlistFile(filename).isDirectory())

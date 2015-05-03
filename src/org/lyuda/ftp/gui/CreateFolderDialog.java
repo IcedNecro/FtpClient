@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.lyuda.ftp.gui;
 
 import java.io.IOException;
@@ -10,10 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.lyuda.ftp.core.FileNavigator;
 
-/**
- *
- * @author roman
- */
+
 public class CreateFolderDialog extends javax.swing.JDialog {
 
     private FileNavigator navigator;
@@ -28,7 +20,6 @@ public class CreateFolderDialog extends javax.swing.JDialog {
     }
     
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         uiNewFolderName = new javax.swing.JTextField();
@@ -98,16 +89,13 @@ public class CreateFolderDialog extends javax.swing.JDialog {
             Logger.getLogger(CreateFolderDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.setVisible(false);
-    }//GEN-LAST:event_uiConfirmNewFolderActionPerformed
-
+    }
     private void uiCancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uiCancelButtonActionPerformed
         this.setVisible(false);
-    }//GEN-LAST:event_uiCancelButtonActionPerformed
+    }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JButton uiCancelButton;
     private javax.swing.JButton uiConfirmNewFolder;
     private javax.swing.JTextField uiNewFolderName;
-    // End of variables declaration//GEN-END:variables
 }

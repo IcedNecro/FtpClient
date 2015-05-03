@@ -1,21 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.lyuda.ftp.gui;
 
 import java.awt.Component;
-import javax.swing.DefaultCellEditor;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
-/**
- *
- * @author roman
- */
+
 public class CustomCellRenderer extends DefaultTreeCellRenderer{
 
     JCheckBox checkBox;

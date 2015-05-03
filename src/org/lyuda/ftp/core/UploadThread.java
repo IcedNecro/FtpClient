@@ -28,11 +28,9 @@ public class UploadThread extends Thread {
     @Override 
     public void run() {
         try {
-            System.out.println(fis.available()+" available");
             
             while(fis.available()!=0) {
                 status++;
-                System.out.println(status);
                 fos.write(fis.read());
             }
             fos.close();

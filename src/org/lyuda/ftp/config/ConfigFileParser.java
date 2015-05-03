@@ -18,7 +18,6 @@ public class ConfigFileParser {
     private static final String PATH_TO_CONFIG_FILE = "config/prop.prop";
     private static final String BOOKMARK_NODES = "\\{([^,]+)\\}\\s*";
     private static final String BOOK_MARKS_PATERN = "\\s*(.+):((.+)|(\\s*\\{([.\\s\\S]*)\\}))";
-    private static final String CURLY_BRACES_PATTERN = "\\{\\s*(\\{[\\s\\S.]*\\}\\s*)*\\s*\\}";
 
     private final File file;
 
@@ -55,7 +54,6 @@ public class ConfigFileParser {
 
             String resultConfig = strBuffer.toString();
 
-            System.out.println(resultConfig);
             patternSeeker(resultConfig);
 
         }
@@ -133,7 +131,6 @@ public class ConfigFileParser {
 
                     for(Iterator<String> iter = map.keySet().iterator();iter.hasNext();){
                         String key = iter.next();
-                        System.out.println(map.get(key)[0]+" "+map.get(key)[1]);
                     
                         Field f = bookMark.getClass().getDeclaredField(map.get(key)[0]);
                         f.setAccessible(true);
@@ -144,12 +141,8 @@ public class ConfigFileParser {
                 }
             } catch(NoSuchFieldException | IllegalAccessException e) {
                 e.printStackTrace();
-                System.out.println("lol");
             }
         }
     }
 
-    public static void main(String[] args) {
-            new ConfigFileParser();
-    }
 }

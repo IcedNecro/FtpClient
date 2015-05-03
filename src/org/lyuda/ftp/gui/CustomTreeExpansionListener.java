@@ -3,20 +3,15 @@ package org.lyuda.ftp.gui;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
-import javax.swing.table.TableModel;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import org.lyuda.ftp.core.FileNavigator;
 import org.lyuda.ftp.core.FileNode;
 
-/**
- *
- * @author roman
- */
+
 public class CustomTreeExpansionListener implements TreeExpansionListener{
     private JTree uiFtpTree;
     private FileNavigator client;
@@ -45,7 +40,6 @@ public class CustomTreeExpansionListener implements TreeExpansionListener{
             if(current.getChildCount()!=0)
                  return;
             else {
-                System.out.println(this.client.getPath());
                 buildTree();
                 table.clear();
                 table.addFiles(client.getFilesAtCurrentDirrectory());
@@ -68,7 +62,6 @@ public class CustomTreeExpansionListener implements TreeExpansionListener{
     @Override
     public void treeCollapsed(TreeExpansionEvent tee) {
         TreePath originalPath = tee.getPath();
-        System.out.println(originalPath);
         String path="";
         try {
             for(int i=0; i<originalPath.getPathCount(); i++)
@@ -85,12 +78,8 @@ public class CustomTreeExpansionListener implements TreeExpansionListener{
     public void buildTree()  {
         
         try {
-            //((DefaultTreeModel)this.uiFtpTree.getModel()).reload(this.current);
-            System.out.println("");
             for(FileNode<?> node : this.client.getFilesAtCurrentDirrectory()){
                 FileNodeInTree toInsert = new FileNodeInTree(node);
-                //for(int i=0; i<((DefaultTreeModel)this.uiFtpTree.getModel()).getChildCount(this.current); i++)
-                System.out.println("inserting "+toInsert);
                 if(node.getType().equals(FileNode.FileType.DIRRECTORY))
                     ((DefaultTreeModel)this.uiFtpTree.getModel()).insertNodeInto(toInsert, this.current, 0);
             }

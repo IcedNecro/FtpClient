@@ -9,10 +9,7 @@ import java.io.IOException;
 import java.util.List;
 import org.apache.commons.net.ftp.FTPFile;
 
-/**
- *
- * @author roman
- */
+
 public interface FileNavigator {
     
     public void createDirrectory(String name) throws IOException;

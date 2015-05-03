@@ -16,10 +16,6 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-/**
- *
- * @author roman
- */
 public class FileSystemNavigator implements FileNavigator {
 
     private Path path = Paths.get("/");

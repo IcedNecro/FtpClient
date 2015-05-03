@@ -7,10 +7,6 @@ package org.lyuda.ftp.core;
 
 import java.util.Calendar;
 
-/**
- *
- * @author roman
- */
 public class FileNode<E> {
     
     private E file;

@@ -1,19 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.lyuda.ftp.gui;
 
-import java.util.Enumeration;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeNode;
 import org.lyuda.ftp.core.FileNode;
 
-/**
- *
- * @author roman
- */
+
 public class FileNodeInTree extends DefaultMutableTreeNode{
 
     private FileNode<?> node;
@@ -43,7 +33,6 @@ public class FileNodeInTree extends DefaultMutableTreeNode{
 
     @Override
     public boolean equals(Object o) {
-        System.out.println(o);
         if(o instanceof FileNodeInTree)
             return this.node.getName().equals(((FileNodeInTree)o).getName());
         return false;
